@@ -8,4 +8,6 @@
     <string name="activity_composer_to_hint">Enter recipient(s)</string>
     <string name="activity_composer_subject_hint">Enter subject</string>
     <string name="activity_composer_body_hint">Enter letter text</string>
+    <string name="composer_activity_google_play_services_warning">Google Play Services required: after installing, close and relaunch this app.</string>
+    <string name="composer_activity_account_unspecified">Account unspecified.</string>
 </resources>
