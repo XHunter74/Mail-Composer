@@ -1,4 +1,4 @@
-package mailcomposer.xhunter74.com.mailcomposer;
+package com.xhunter74.mailcomposer;
 
 import org.junit.Test;
 
