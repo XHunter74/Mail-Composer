@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Mail composer</string>
+    <string name="activity_composer_from_label">From:</string>
+    <string name="activity_composer_from_text">xhunter74@gmail.com</string>
+    <string name="activity_composer_to_label">To:</string>
+    <string name="activity_composer_subject_label">Subject:</string>
+    <string name="activity_composer_attachments_label">Attachments:</string>
+    <string name="activity_composer_to_hint">Enter recipient(s)</string>
+    <string name="activity_composer_subject_hint">Enter subject</string>
+    <string name="activity_composer_body_hint">Enter letter text</string>
 </resources>

@@ -10,4 +10,119 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".activities.ComposerActivity">
 
+    <TextView
+        android:id="@+id/activity_composer_from_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/activity_composer_from_label"
+        android:textColor="@color/black"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/activity_composer_from"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/activity_composer_subject_label"
+        android:text="@string/activity_composer_from_text"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/activity_composer_to_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/activity_composer_from_label"
+        android:layout_marginTop="20dp"
+        android:text="@string/activity_composer_to_label"
+        android:textColor="@color/black"
+        android:textSize="16sp"/>
+
+    <EditText
+        android:id="@+id/activity_composer_to"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/activity_composer_from_label"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/activity_composer_subject_label"
+        android:hint="@string/activity_composer_to_hint"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/activity_composer_subject_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/activity_composer_to_label"
+        android:layout_marginTop="20dp"
+        android:text="@string/activity_composer_subject_label"
+        android:textColor="@color/black"
+        android:textSize="16sp"/>
+
+    <EditText
+        android:id="@+id/activity_composer_subject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/activity_composer_to_label"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/activity_composer_subject_label"
+        android:hint="@string/activity_composer_subject_hint"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/activity_composer_attachments_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/activity_composer_subject_label"
+        android:layout_marginTop="20dp"
+        android:text="@string/activity_composer_attachments_label"
+        android:textColor="@color/black"
+        android:textSize="16sp"/>
+
+    <RelativeLayout
+        android:id="@+id/activity_composer_attachments_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/activity_composer_attachments_label"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/activity_composer_attachments_button"/>
+
+        <ImageButton
+            android:id="@+id/activity_composer_attachments_button"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            android:src="@drawable/ic_attach_file_black_24dp"/>
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/activity_composer_body"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/activity_composer_send_button"
+        android:layout_below="@+id/activity_composer_attachments_container" android:gravity="top"
+        android:hint="@string/activity_composer_body_hint" android:inputType="textMultiLine"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:textSize="16sp"/>
+
+
+    <ImageButton
+        android:id="@+id/activity_composer_send_button"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="@color/white"
+        android:src="@drawable/ic_send_black_24dp"/>
+
 </RelativeLayout>
