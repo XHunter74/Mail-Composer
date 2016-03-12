@@ -24,7 +24,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/activity_composer_subject_label"
-        android:text="@string/activity_composer_from_text"
         android:textSize="16sp"/>
 
     <TextView
@@ -109,10 +108,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/activity_composer_send_button"
-        android:layout_below="@+id/activity_composer_attachments_container" android:gravity="top"
-        android:hint="@string/activity_composer_body_hint" android:inputType="textMultiLine"
+        android:layout_below="@+id/activity_composer_attachments_container"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
+        android:gravity="top"
+        android:hint="@string/activity_composer_body_hint"
+        android:inputType="textMultiLine"
         android:textSize="16sp"/>
 
 
