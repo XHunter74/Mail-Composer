@@ -45,6 +45,7 @@
         android:layout_marginTop="5dp"
         android:layout_toRightOf="@+id/activity_composer_subject_label"
         android:hint="@string/activity_composer_to_hint"
+        android:inputType="textEmailAddress"
         android:textSize="16sp"/>
 
     <TextView
