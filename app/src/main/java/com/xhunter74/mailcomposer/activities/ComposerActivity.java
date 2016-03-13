@@ -192,6 +192,8 @@ public class ComposerActivity extends AppCompatActivity {
             case REQUEST_AUTHORIZATION:
                 if (resultCode != RESULT_OK) {
                     chooseAccount();
+                }else{
+                    sendEmail();
                 }
                 break;
         }
