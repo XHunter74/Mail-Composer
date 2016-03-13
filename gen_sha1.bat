@@ -1,0 +1,2 @@
+rem https://code.google.com/apis/console/?noredirect#project:637885520929:access
+"C:\Program Files (x86)\Java\jre1.8.0_73\bin\keytool.exe" -list -v -keystore MailComposer.jks -alias "Application Key" -storepass "dhy4$GFke^" -keypass "JK*kdl34jd"
