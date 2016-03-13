@@ -12,8 +12,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,7 +29,6 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecovera
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.gmail.GmailScopes;
 import com.xhunter74.mailcomposer.R;
-import com.xhunter74.mailcomposer.adapters.AttachmentListAdapter;
 import com.xhunter74.mailcomposer.gmail.EmailSender;
 import com.xhunter74.mailcomposer.models.MessageModel;
 import com.xhunter74.mailcomposer.utils.FileUtils;
@@ -58,8 +55,7 @@ public class ComposerActivity extends AppCompatActivity {
     private EditText mBodyEditText;
     private ProgressDialog mProgress;
     private List<String> mAttachmentsList;
-    private AttachmentListAdapter mAttachmentListAdapter;
-    private RecyclerView mAttachmentsRecyclerView;
+    private TextView mAttachmentsTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +77,10 @@ public class ComposerActivity extends AppCompatActivity {
         mRecipientsEditText = (EditText) findViewById(R.id.activity_composer_to);
         mSubjectEditText = (EditText) findViewById(R.id.activity_composer_subject);
         mBodyEditText = (EditText) findViewById(R.id.activity_composer_body);
+        mAttachmentsTextView = (TextView) findViewById(R.id.activity_composer_attachments);
+        mAttachmentsTextView.setText(
+                String.format(getString(R.string.activity_composer_attachments),
+                        mAttachmentsList.size()));
         ImageButton attachmentsButton =
                 (ImageButton) findViewById(R.id.activity_composer_attachments_button);
         assert attachmentsButton != null;
@@ -100,30 +100,6 @@ public class ComposerActivity extends AppCompatActivity {
                 }
             }
         });
-        mAttachmentsRecyclerView = (RecyclerView)
-                findViewById(R.id.activity_composer_attachments_list);
-        assert mAttachmentsRecyclerView != null;
-        mAttachmentsRecyclerView.setVisibility(View.GONE);
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(
-                2, StaggeredGridLayoutManager.VERTICAL);
-        assert mAttachmentsRecyclerView != null;
-        mAttachmentsRecyclerView.setLayoutManager(layoutManager);
-        mAttachmentListAdapter = new AttachmentListAdapter(ComposerActivity.this,
-                this.mAttachmentsList.toArray(new String[this.mAttachmentsList.size()]));
-        mAttachmentListAdapter.setOnAttachmentClickListeners(new AttachmentListAdapter.OnAttachmentClick() {
-            @Override
-            public void onClick(int position) {
-                mAttachmentsList.remove(position);
-                mAttachmentListAdapter.setItems(
-                        mAttachmentsList.toArray(new String[mAttachmentsList.size()]));
-                if (mAttachmentsList.size() == 0) {
-                    mAttachmentsRecyclerView.setVisibility(View.GONE);
-                }
-            }
-        });
-        mAttachmentsRecyclerView.setAdapter(mAttachmentListAdapter);
-        mAttachmentListAdapter.setItems(
-                this.mAttachmentsList.toArray(new String[this.mAttachmentsList.size()]));
     }
 
     private void verifyFormAndSendEmail() {
@@ -253,13 +229,11 @@ public class ComposerActivity extends AppCompatActivity {
     }
 
     private void addAttachments(String path) {
-        if (mAttachmentsRecyclerView.getVisibility() == View.GONE) {
-            mAttachmentsRecyclerView.setVisibility(View.VISIBLE);
-        }
+        mAttachmentsTextView.setText(
+                String.format(getString(R.string.activity_composer_attachments),
+                        mAttachmentsList.size()));
         mAttachmentsList.add(path);
-        mAttachmentListAdapter
-                .setItems(mAttachmentsList.toArray(new String[mAttachmentsList.size()]));
-    }
+4    }
 
     private void chooseAccount() {
         startActivityForResult(mCredential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
