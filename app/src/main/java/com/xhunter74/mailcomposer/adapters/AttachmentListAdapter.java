@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.xhunter74.mailcomposer.R;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Serhiy.Krasovskyy on 13.03.2016.
@@ -18,11 +20,17 @@ public class AttachmentListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     private static final String TAG = AttachmentListAdapter.class.getName();
     private final Context mContext;
+    private final List<OnAttachmentClick> mOnAttachmentClicks;
     private String[] mItems;
 
     public AttachmentListAdapter(Context context, String[] items) {
         mContext = context;
         mItems = items;
+        mOnAttachmentClicks = new ArrayList<>();
+    }
+
+    public void setOnAttachmentClickListeners(OnAttachmentClick onAttachmentClick) {
+        mOnAttachmentClicks.add(onAttachmentClick);
     }
 
     public void setItems(String[] items) {
@@ -42,10 +50,19 @@ public class AttachmentListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         prepareAttachmentViewHolder(viewHolder, position);
     }
 
-    private void prepareAttachmentViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+    private void prepareAttachmentViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
         AttachmentViewHolder attachmentViewHolder = (AttachmentViewHolder) viewHolder;
-        String fileName = getFileName(mItems[position]);
+        final String fileName = getFileName(mItems[position]);
         attachmentViewHolder.mFileName.setText(fileName);
+        attachmentViewHolder.mAttachmentContainer.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                for (OnAttachmentClick onAttachmentClick : mOnAttachmentClicks) {
+                    onAttachmentClick.onClick(position);
+                }
+                return false;
+            }
+        });
     }
 
     private String getFileName(String filePath) {
@@ -60,6 +77,10 @@ public class AttachmentListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         } else {
             return 0;
         }
+    }
+
+    public interface OnAttachmentClick {
+        void onClick(int position);
     }
 
     private class AttachmentViewHolder extends RecyclerView.ViewHolder {
