@@ -93,7 +93,8 @@
             android:layout_height="match_parent"
             android:layout_toLeftOf="@+id/activity_composer_attachments_button"
             android:gravity="center_vertical"
-            android:text="@string/activity_composer_attachments"/>
+            android:text="@string/activity_composer_attachments"
+            android:textSize="16sp"/>
 
         <ImageButton
             android:id="@+id/activity_composer_attachments_button"
