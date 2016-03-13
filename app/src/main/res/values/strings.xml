@@ -10,4 +10,10 @@
     <string name="activity_composer_body_hint">Enter letter text</string>
     <string name="composer_activity_google_play_services_warning">Google Play Services required: after installing, close and relaunch this app.</string>
     <string name="composer_activity_account_unspecified">Account unspecified.</string>
+    <string name="composer_activity_no_network_connection_message">No network connection available.</string>
+    <string name="composer_activity_from_address_empty_error">Field from can not be empty.</string>
+    <string name="composer_activity_recipient_address_error">Field can not be empty.</string>
+    <string name="composer_activity_progress_dialog_message">Calling Gmail API …</string>
+    <string name="composer_activity_exception_message">The following error occurred:\n%s</string>
+    <string name="composer_activity_email_send_successfully">Email was sent successfully.</string>
 </resources>
