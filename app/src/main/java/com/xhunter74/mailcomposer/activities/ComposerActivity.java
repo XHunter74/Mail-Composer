@@ -229,11 +229,11 @@ public class ComposerActivity extends AppCompatActivity {
     }
 
     private void addAttachments(String path) {
+        mAttachmentsList.add(path);
         mAttachmentsTextView.setText(
                 String.format(getString(R.string.activity_composer_attachments),
                         mAttachmentsList.size()));
-        mAttachmentsList.add(path);
-4    }
+    }
 
     private void chooseAccount() {
         startActivityForResult(mCredential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
