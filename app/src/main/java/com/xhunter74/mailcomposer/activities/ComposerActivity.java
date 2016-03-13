@@ -9,8 +9,11 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -26,20 +29,25 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecovera
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.gmail.GmailScopes;
 import com.xhunter74.mailcomposer.R;
+import com.xhunter74.mailcomposer.adapters.AttachmentListAdapter;
 import com.xhunter74.mailcomposer.gmail.EmailSender;
 import com.xhunter74.mailcomposer.models.MessageModel;
+import com.xhunter74.mailcomposer.utils.FileUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.mail.MessagingException;
 
 public class ComposerActivity extends AppCompatActivity {
 
-    private static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     private static final int REQUEST_ACCOUNT_PICKER = 1000;
-    private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final int REQUEST_AUTHORIZATION = 1001;
+    private static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
+    private static final int FILE_SELECT_CODE = 1003;
+    private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = {GmailScopes.GMAIL_COMPOSE};
     private GoogleAccountCredential mCredential;
     private TextView mFromTextView;
@@ -47,15 +55,17 @@ public class ComposerActivity extends AppCompatActivity {
     private EditText mSubjectEditText;
     private EditText mBodyEditText;
     private ProgressDialog mProgress;
+    private List<String> mAttachmentsList;
+    private AttachmentListAdapter mAttachmentListAdapter;
+    private RecyclerView mAttachmentsRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_composer);
-        mProgress = new ProgressDialog(this);
-        mProgress.setMessage(getString(R.string.composer_activity_progress_dialog_message));
-        SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
+        mAttachmentsList = new ArrayList<>();
         prepareControls();
+        SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff())
@@ -63,6 +73,8 @@ public class ComposerActivity extends AppCompatActivity {
     }
 
     private void prepareControls() {
+        mProgress = new ProgressDialog(this);
+        mProgress.setMessage(getString(R.string.composer_activity_progress_dialog_message));
         mFromTextView = (TextView) findViewById(R.id.activity_composer_from);
         mRecipientsEditText = (EditText) findViewById(R.id.activity_composer_to);
         mSubjectEditText = (EditText) findViewById(R.id.activity_composer_subject);
@@ -75,6 +87,37 @@ public class ComposerActivity extends AppCompatActivity {
                 verifyFormAndSendEmail();
             }
         });
+        ImageButton attachmentsButton =
+                (ImageButton) findViewById(R.id.activity_composer_attachments_button);
+        assert attachmentsButton != null;
+        attachmentsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    Intent intent = new Intent();
+                    intent.setType("*/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(intent, FILE_SELECT_CODE);
+
+                } else {
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    intent.setType("*/*");
+                    startActivityForResult(intent, FILE_SELECT_CODE);
+                }
+            }
+        });
+        mAttachmentsRecyclerView = (RecyclerView)
+                findViewById(R.id.activity_composer_attachments_list);
+        mAttachmentsRecyclerView.setVisibility(View.GONE);
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(
+                2, StaggeredGridLayoutManager.VERTICAL);
+        assert mAttachmentsRecyclerView != null;
+        mAttachmentsRecyclerView.setLayoutManager(layoutManager);
+        mAttachmentListAdapter = new AttachmentListAdapter(ComposerActivity.this,
+                this.mAttachmentsList.toArray(new String[this.mAttachmentsList.size()]));
+        mAttachmentsRecyclerView.setAdapter(mAttachmentListAdapter);
+        mAttachmentListAdapter.setItems(
+                this.mAttachmentsList.toArray(new String[this.mAttachmentsList.size()]));
     }
 
     private void verifyFormAndSendEmail() {
@@ -160,8 +203,7 @@ public class ComposerActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(
-            int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
@@ -170,14 +212,11 @@ public class ComposerActivity extends AppCompatActivity {
                 }
                 break;
             case REQUEST_ACCOUNT_PICKER:
-                if (resultCode == RESULT_OK && data != null &&
-                        data.getExtras() != null) {
-                    String accountName =
-                            data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+                if (resultCode == RESULT_OK && data != null && data.getExtras() != null) {
+                    String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
                     if (accountName != null) {
                         mCredential.setSelectedAccountName(accountName);
-                        SharedPreferences settings =
-                                getPreferences(Context.MODE_PRIVATE);
+                        SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putString(PREF_ACCOUNT_NAME, accountName);
                         editor.apply();
@@ -192,13 +231,28 @@ public class ComposerActivity extends AppCompatActivity {
             case REQUEST_AUTHORIZATION:
                 if (resultCode != RESULT_OK) {
                     chooseAccount();
-                }else{
+                } else {
                     sendEmail();
+                }
+                break;
+            case FILE_SELECT_CODE:
+                if (resultCode == RESULT_OK) {
+                    String filePath = FileUtils.getPath(ComposerActivity.this, data.getData());
+                    addAttachments(filePath);
                 }
                 break;
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void addAttachments(String path) {
+        if (mAttachmentsRecyclerView.getVisibility() == View.GONE) {
+            mAttachmentsRecyclerView.setVisibility(View.VISIBLE);
+        }
+        mAttachmentsList.add(path);
+        mAttachmentListAdapter
+                .setItems(mAttachmentsList.toArray(new String[mAttachmentsList.size()]));
     }
 
     private void chooseAccount() {

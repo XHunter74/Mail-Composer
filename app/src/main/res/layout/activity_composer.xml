@@ -83,23 +83,24 @@
         android:id="@+id/activity_composer_attachments_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_below="@+id/activity_composer_attachments_label"
-        android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/activity_composer_attachments_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/activity_composer_attachments_button"/>
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/activity_composer_attachments_button"
+            android:scrollbars="vertical"/>
 
         <ImageButton
             android:id="@+id/activity_composer_attachments_button"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
             android:background="@color/white"
             android:src="@drawable/ic_attach_file_black_24dp"/>
     </RelativeLayout>
