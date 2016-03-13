@@ -16,4 +16,5 @@
     <string name="composer_activity_progress_dialog_message">Calling Gmail API …</string>
     <string name="composer_activity_exception_message">The following error occurred:\n%s</string>
     <string name="composer_activity_email_send_successfully">Email was sent successfully.</string>
+    <string name="action_send">Send email</string>
 </resources>

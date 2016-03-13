@@ -15,6 +15,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -79,14 +81,6 @@ public class ComposerActivity extends AppCompatActivity {
         mRecipientsEditText = (EditText) findViewById(R.id.activity_composer_to);
         mSubjectEditText = (EditText) findViewById(R.id.activity_composer_subject);
         mBodyEditText = (EditText) findViewById(R.id.activity_composer_body);
-        ImageButton sendEmailButton = (ImageButton) findViewById(R.id.activity_composer_send_button);
-        assert sendEmailButton != null;
-        sendEmailButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                verifyFormAndSendEmail();
-            }
-        });
         ImageButton attachmentsButton =
                 (ImageButton) findViewById(R.id.activity_composer_attachments_button);
         assert attachmentsButton != null;
@@ -108,6 +102,7 @@ public class ComposerActivity extends AppCompatActivity {
         });
         mAttachmentsRecyclerView = (RecyclerView)
                 findViewById(R.id.activity_composer_attachments_list);
+        assert mAttachmentsRecyclerView != null;
         mAttachmentsRecyclerView.setVisibility(View.GONE);
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(
                 2, StaggeredGridLayoutManager.VERTICAL);
@@ -115,6 +110,17 @@ public class ComposerActivity extends AppCompatActivity {
         mAttachmentsRecyclerView.setLayoutManager(layoutManager);
         mAttachmentListAdapter = new AttachmentListAdapter(ComposerActivity.this,
                 this.mAttachmentsList.toArray(new String[this.mAttachmentsList.size()]));
+        mAttachmentListAdapter.setOnAttachmentClickListeners(new AttachmentListAdapter.OnAttachmentClick() {
+            @Override
+            public void onClick(int position) {
+                mAttachmentsList.remove(position);
+                mAttachmentListAdapter.setItems(
+                        mAttachmentsList.toArray(new String[mAttachmentsList.size()]));
+                if (mAttachmentsList.size() == 0) {
+                    mAttachmentsRecyclerView.setVisibility(View.GONE);
+                }
+            }
+        });
         mAttachmentsRecyclerView.setAdapter(mAttachmentListAdapter);
         mAttachmentListAdapter.setItems(
                 this.mAttachmentsList.toArray(new String[this.mAttachmentsList.size()]));
@@ -263,6 +269,30 @@ public class ComposerActivity extends AppCompatActivity {
         mRecipientsEditText.setText("");
         mBodyEditText.setText("");
         mSubjectEditText.setText("");
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_mail_composer, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        switch (itemId) {
+            case R.id.action_send_email:
+                verifyFormAndSendEmail();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private class SendEmailTask extends AsyncTask<EmailSender, Void, Void> {

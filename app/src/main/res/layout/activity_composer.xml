@@ -82,7 +82,8 @@
     <RelativeLayout
         android:id="@+id/activity_composer_attachments_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/activity_composer_body"
         android:layout_below="@+id/activity_composer_attachments_label"
         android:layout_marginTop="10dp"
         android:orientation="horizontal">
@@ -90,7 +91,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/activity_composer_attachments_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@+id/activity_composer_attachments_button"
             android:scrollbars="vertical"/>
@@ -108,24 +109,14 @@
     <EditText
         android:id="@+id/activity_composer_body"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/activity_composer_send_button"
-        android:layout_below="@+id/activity_composer_attachments_container"
-        android:layout_marginBottom="10dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="10dp"
         android:gravity="top"
         android:hint="@string/activity_composer_body_hint"
         android:inputType="textMultiLine"
+        android:minHeight="250dp"
         android:textSize="16sp"/>
 
-
-    <ImageButton
-        android:id="@+id/activity_composer_send_button"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:background="@color/white"
-        android:src="@drawable/ic_send_black_24dp"/>
 
 </RelativeLayout>
