@@ -3,9 +3,8 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
-
     defaultConfig {
-        applicationId "mailcomposer.xhunter74.com.mailcomposer"
+        applicationId 'com.xhunter74.mailcomposer'
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 1
@@ -16,6 +15,26 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    signingConfigs {
+        release {
+            //noinspection SpellCheckingInspection
+            storeFile file('../MailComposer.jks')
+            storePassword 'dhy4$GFke^'
+            //noinspection SpellCheckingInspection
+            keyAlias 'Application Key'
+            keyPassword 'JK*kdl34jd'
+        }
+        debug {
+            //noinspection SpellCheckingInspection
+            storeFile file('../MailComposer.jks')
+            storePassword 'dhy4$GFke^'
+            //noinspection SpellCheckingInspection
+            keyAlias 'Application Key'
+            keyPassword 'JK*kdl34jd'
+        }
+    }
+    productFlavors {
     }
 }
 
@@ -31,4 +50,7 @@ dependencies {
     compile('com.google.apis:google-api-services-gmail:v1-rev29-1.20.0') {
         exclude group: 'org.apache.httpcomponents'
     }
+    compile files('libs/activation.jar')
+    compile files('libs/additionnal.jar')
+    compile files('libs/mail.jar')
 }
