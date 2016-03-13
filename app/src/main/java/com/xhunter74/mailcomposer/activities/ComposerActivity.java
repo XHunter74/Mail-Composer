@@ -29,6 +29,8 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecovera
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.gmail.GmailScopes;
 import com.xhunter74.mailcomposer.R;
+import com.xhunter74.mailcomposer.adapters.AttachmentListAdapter;
+import com.xhunter74.mailcomposer.dialogs.AttachmentsDialog;
 import com.xhunter74.mailcomposer.gmail.EmailSender;
 import com.xhunter74.mailcomposer.models.MessageModel;
 import com.xhunter74.mailcomposer.utils.FileUtils;
@@ -81,6 +83,14 @@ public class ComposerActivity extends AppCompatActivity {
         mAttachmentsTextView.setText(
                 String.format(getString(R.string.activity_composer_attachments),
                         mAttachmentsList.size()));
+        mAttachmentsTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mAttachmentsList.size() > 0) {
+                    showAttachmentsDialog();
+                }
+            }
+        });
         ImageButton attachmentsButton =
                 (ImageButton) findViewById(R.id.activity_composer_attachments_button);
         assert attachmentsButton != null;
@@ -100,6 +110,21 @@ public class ComposerActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void showAttachmentsDialog() {
+        final AttachmentsDialog attachmentsDialog = AttachmentsDialog
+                .getDialogInstance(mAttachmentsList.toArray(new String[mAttachmentsList.size()]));
+        attachmentsDialog.setOnAttachmentLongClicks(new AttachmentListAdapter.OnAttachmentLongClick() {
+            @Override
+            public void onLongClick(int position) {
+                mAttachmentsList.remove(position);
+                mAttachmentsTextView.setText(
+                        String.format(getString(R.string.activity_composer_attachments),
+                                mAttachmentsList.size()));
+            }
+        });
+        attachmentsDialog.show(getFragmentManager(), AttachmentsDialog.TAG);
     }
 
     private void verifyFormAndSendEmail() {

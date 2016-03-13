@@ -20,17 +20,17 @@ public class AttachmentListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     private static final String TAG = AttachmentListAdapter.class.getName();
     private final Context mContext;
-    private final List<OnAttachmentClick> mOnAttachmentClicks;
+    private final List<OnAttachmentLongClick> mOnAttachmentLongClicks;
     private String[] mItems;
 
     public AttachmentListAdapter(Context context, String[] items) {
         mContext = context;
         mItems = items;
-        mOnAttachmentClicks = new ArrayList<>();
+        mOnAttachmentLongClicks = new ArrayList<>();
     }
 
-    public void setOnAttachmentClickListeners(OnAttachmentClick onAttachmentClick) {
-        mOnAttachmentClicks.add(onAttachmentClick);
+    public void setOnAttachmentLongClickListeners(OnAttachmentLongClick onAttachmentLongClick) {
+        mOnAttachmentLongClicks.add(onAttachmentLongClick);
     }
 
     public void setItems(String[] items) {
@@ -57,8 +57,8 @@ public class AttachmentListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         attachmentViewHolder.mAttachmentContainer.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                for (OnAttachmentClick onAttachmentClick : mOnAttachmentClicks) {
-                    onAttachmentClick.onClick(position);
+                for (OnAttachmentLongClick onAttachmentLongClick : mOnAttachmentLongClicks) {
+                    onAttachmentLongClick.onLongClick(position);
                 }
                 return false;
             }
@@ -79,8 +79,8 @@ public class AttachmentListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
     }
 
-    public interface OnAttachmentClick {
-        void onClick(int position);
+    public interface OnAttachmentLongClick {
+        void onLongClick(int position);
     }
 
     private class AttachmentViewHolder extends RecyclerView.ViewHolder {
