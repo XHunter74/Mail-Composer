@@ -10,6 +10,7 @@ public class MessageModel {
     private String[] mRecipientAddresses;
     private String mSubject;
     private String mMessageBody;
+    private String[] mAttachments;
 
     public String getFromAddress() {
         return mFromAddress;
@@ -48,5 +49,13 @@ public class MessageModel {
 
     public void setMessageBody(String messageBody) {
         this.mMessageBody = messageBody;
+    }
+
+    public String[] getAttachments() {
+        return mAttachments;
+    }
+
+    public void setAttachments(String[] attachments) {
+        mAttachments = attachments;
     }
 }

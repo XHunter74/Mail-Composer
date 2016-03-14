@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.xhunter74.mailcomposer.R;
+import com.xhunter74.mailcomposer.utils.FileUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +52,7 @@ public class AttachmentListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     private void prepareAttachmentViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
         AttachmentViewHolder attachmentViewHolder = (AttachmentViewHolder) viewHolder;
-        final String fileName = getFileName(mItems[position]);
+        final String fileName = FileUtils.getFileName(mItems[position]);
         attachmentViewHolder.mFileName.setText(fileName);
         attachmentViewHolder.mAttachmentContainer.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -63,11 +63,6 @@ public class AttachmentListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 return false;
             }
         });
-    }
-
-    private String getFileName(String filePath) {
-        File file = new File(filePath);
-        return file.getName();
     }
 
     @Override

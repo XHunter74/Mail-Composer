@@ -12,6 +12,7 @@ import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.Message;
 import com.xhunter74.mailcomposer.R;
 import com.xhunter74.mailcomposer.models.MessageModel;
+import com.xhunter74.mailcomposer.utils.FileUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -19,17 +20,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 /**
  * Created by Serhiy.Krasovskyy on 13.03.2016.
  */
 public class EmailSender {
     private static final String USER_ID = "me";
+    private static final String BODY_TYPE = "text/plain";
+    private static final String CONTENT_TYPE = "Content-Type";
+    private static final String MESSAGE_CONTENT_TYPE = "text/plain; charset=\"UTF-8\"";
+    private static final String CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding";
+    private static final String BASE64 = "base64";
     private final MessageModel mMessageModel;
     private Context mContext;
     private GoogleAccountCredential mCredential;
@@ -42,7 +54,12 @@ public class EmailSender {
     }
 
     public void sendEmail() throws MessagingException, IOException {
-        MimeMessage mimeMessage = createEmail(mMessageModel);
+        MimeMessage mimeMessage;
+        if (mMessageModel.getAttachments().length > 0) {
+            mimeMessage = createEmailWithAttachment(mMessageModel);
+        } else {
+            mimeMessage = createEmail(mMessageModel);
+        }
         //Message email = createMessageWithEmail(mimeMessage);
         HttpTransport transport = AndroidHttp.newCompatibleTransport();
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
@@ -87,6 +104,55 @@ public class EmailSender {
         email.setText(messageModel.getMessageBody());
         return email;
     }
+
+    public MimeMessage createEmailWithAttachment(MessageModel messageModel)
+            throws MessagingException, IOException {
+        Properties props = new Properties();
+        Session session = Session.getDefaultInstance(props, null);
+
+        MimeMessage email = new MimeMessage(session);
+
+        email.setFrom(new InternetAddress(messageModel.getFromAddress()));
+        if (messageModel.getRecipientAddresses().length > 1) {
+            InternetAddress[] addresses = getInternetAddresses(messageModel.getRecipientAddresses());
+            email.addRecipients(javax.mail.Message.RecipientType.TO, addresses);
+        } else {
+            email.addRecipient(javax.mail.Message.RecipientType.TO,
+                    new InternetAddress(messageModel.getRecipientAddresses()[0]));
+        }
+
+        email.setSubject(messageModel.getSubject());
+
+        MimeBodyPart mimeBodyPart = new MimeBodyPart();
+        mimeBodyPart.setContent(messageModel.getMessageBody(), BODY_TYPE);
+        mimeBodyPart.setHeader(CONTENT_TYPE, MESSAGE_CONTENT_TYPE);
+
+        Multipart multipart = new MimeMultipart();
+        multipart.addBodyPart(mimeBodyPart);
+
+        mimeBodyPart = new MimeBodyPart();
+        mimeBodyPart = addMessageAttachments(mimeBodyPart, messageModel.getAttachments());
+        multipart.addBodyPart(mimeBodyPart);
+        email.setContent(multipart);
+
+        return email;
+    }
+
+    private MimeBodyPart addMessageAttachments(MimeBodyPart mimeBodyPart, String[] attachments)
+            throws MessagingException, IOException {
+
+        for (String attachment : attachments) {
+            DataSource source = new FileDataSource(attachment);
+            mimeBodyPart.setDataHandler(new DataHandler(source));
+            String fileName = FileUtils.getFileName(attachment);
+            mimeBodyPart.setFileName(fileName);
+            String contentType = FileUtils.getContentType(attachment);
+            mimeBodyPart.setHeader(CONTENT_TYPE, contentType + "; name=\"" + fileName + "\"");
+            mimeBodyPart.setHeader(CONTENT_TRANSFER_ENCODING, BASE64);
+        }
+        return mimeBodyPart;
+    }
+
 
     private InternetAddress[] getInternetAddresses(String[] addresses) throws AddressException {
         List<InternetAddress> result = new ArrayList<>();

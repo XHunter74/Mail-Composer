@@ -145,6 +145,7 @@ public class ComposerActivity extends AppCompatActivity {
         messageModel.setRecipientAddresses(mRecipientsEditText.getText().toString());
         messageModel.setSubject(mSubjectEditText.getText().toString());
         messageModel.setMessageBody(mBodyEditText.getText().toString());
+        messageModel.setAttachments(mAttachmentsList.toArray(new String[mAttachmentsList.size()]));
         EmailSender emailSender = new EmailSender(ComposerActivity.this, mCredential, messageModel);
         new SendEmailTask().execute(emailSender);
     }
@@ -268,6 +269,10 @@ public class ComposerActivity extends AppCompatActivity {
         mRecipientsEditText.setText("");
         mBodyEditText.setText("");
         mSubjectEditText.setText("");
+        mAttachmentsList = new ArrayList<>();
+        mAttachmentsTextView.setText(
+                String.format(getString(R.string.activity_composer_attachments),
+                        mAttachmentsList.size()));
     }
 
     @Override
