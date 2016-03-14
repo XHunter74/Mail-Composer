@@ -85,6 +85,9 @@ public class AttachmentsDialog extends DialogFragment {
                                 : mOnAttachmentLongClicks) {
                             onAttachmentLongClick.onLongClick(position);
                         }
+                        if (mAttachments.size()==0){
+                            dismiss();
+                        }
                     }
                 });
         RecyclerView attachmentsList = (RecyclerView)

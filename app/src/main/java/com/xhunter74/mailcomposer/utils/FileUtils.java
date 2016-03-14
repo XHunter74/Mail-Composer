@@ -148,8 +148,14 @@ public class FileUtils {
         return file.getName();
     }
 
-    public static String getContentType(String filePath) throws IOException {
-        InputStream is = new BufferedInputStream(new FileInputStream(filePath));
-        return URLConnection.guessContentTypeFromStream(is);
+    public static String getContentType(String filePath) {
+        String result = null;
+        try {
+            InputStream is = new BufferedInputStream(new FileInputStream(filePath));
+            result = URLConnection.guessContentTypeFromStream(is);
+        } catch (IOException e) {
+            //do nothing
+        }
+        return result;
     }
 }

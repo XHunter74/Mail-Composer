@@ -35,6 +35,7 @@ import com.xhunter74.mailcomposer.gmail.EmailSender;
 import com.xhunter74.mailcomposer.models.MessageModel;
 import com.xhunter74.mailcomposer.utils.FileUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -246,7 +247,15 @@ public class ComposerActivity extends AppCompatActivity {
             case FILE_SELECT_CODE:
                 if (resultCode == RESULT_OK) {
                     String filePath = FileUtils.getPath(ComposerActivity.this, data.getData());
-                    addAttachments(filePath);
+                    if (new File(filePath).exists()) {
+                        addAttachments(filePath);
+                    } else {
+                        Toast.makeText(ComposerActivity.this,
+                                String.format(getString(
+                                        R.string.composer_activity_file_doesnt_exist_message),
+                                        filePath),
+                                Toast.LENGTH_LONG).show();
+                    }
                 }
                 break;
         }
