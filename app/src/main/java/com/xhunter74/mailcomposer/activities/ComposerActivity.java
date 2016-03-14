@@ -17,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -89,25 +88,6 @@ public class ComposerActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (mAttachmentsList.size() > 0) {
                     showAttachmentsDialog();
-                }
-            }
-        });
-        ImageButton attachmentsButton =
-                (ImageButton) findViewById(R.id.activity_composer_attachments_button);
-        assert attachmentsButton != null;
-        attachmentsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    Intent intent = new Intent();
-                    intent.setType("*/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(intent, FILE_SELECT_CODE);
-
-                } else {
-                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                    intent.setType("*/*");
-                    startActivityForResult(intent, FILE_SELECT_CODE);
                 }
             }
         });
@@ -303,8 +283,25 @@ public class ComposerActivity extends AppCompatActivity {
             case R.id.action_send_email:
                 verifyFormAndSendEmail();
                 return true;
+            case R.id.action_add_attachment:
+                showChooseFileDialog();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void showChooseFileDialog() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Intent intent = new Intent();
+            intent.setType("*/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(intent, FILE_SELECT_CODE);
+
+        } else {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("*/*");
+            startActivityForResult(intent, FILE_SELECT_CODE);
         }
     }
 
