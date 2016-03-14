@@ -129,19 +129,17 @@ public class EmailSender {
 
         Multipart multipart = new MimeMultipart();
         multipart.addBodyPart(mimeBodyPart);
-
-        mimeBodyPart = new MimeBodyPart();
-        mimeBodyPart = addMessageAttachments(mimeBodyPart, messageModel.getAttachments());
-        multipart.addBodyPart(mimeBodyPart);
+        multipart = addMessageAttachments(multipart, messageModel.getAttachments());
         email.setContent(multipart);
 
         return email;
     }
 
-    private MimeBodyPart addMessageAttachments(MimeBodyPart mimeBodyPart, String[] attachments)
+    private Multipart addMessageAttachments(Multipart multipart, String[] attachments)
             throws MessagingException, IOException {
 
         for (String attachment : attachments) {
+            MimeBodyPart mimeBodyPart = new MimeBodyPart();
             DataSource source = new FileDataSource(attachment);
             mimeBodyPart.setDataHandler(new DataHandler(source));
             String fileName = FileUtils.getFileName(attachment);
@@ -149,8 +147,9 @@ public class EmailSender {
             String contentType = FileUtils.getContentType(attachment);
             mimeBodyPart.setHeader(CONTENT_TYPE, contentType + "; name=\"" + fileName + "\"");
             mimeBodyPart.setHeader(CONTENT_TRANSFER_ENCODING, BASE64);
+            multipart.addBodyPart(mimeBodyPart);
         }
-        return mimeBodyPart;
+        return multipart;
     }
 
 
