@@ -227,7 +227,7 @@ public class ComposerActivity extends AppCompatActivity {
             case FILE_SELECT_CODE:
                 if (resultCode == RESULT_OK) {
                     String filePath = FileUtils.getPath(ComposerActivity.this, data.getData());
-                    if (new File(filePath).exists()) {
+                    if (!TextUtils.isEmpty(filePath) && new File(filePath).exists()) {
                         addAttachments(filePath);
                     } else {
                         Toast.makeText(ComposerActivity.this,
@@ -245,9 +245,8 @@ public class ComposerActivity extends AppCompatActivity {
 
     private void addAttachments(String path) {
         mAttachmentsList.add(path);
-        mAttachmentsTextView.setText(
-                String.format(getString(R.string.activity_composer_attachments),
-                        mAttachmentsList.size()));
+        mAttachmentsTextView.setText(String.format(getString(R.string.activity_composer_attachments),
+                mAttachmentsList.size()));
     }
 
     private void chooseAccount() {
