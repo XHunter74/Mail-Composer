@@ -70,6 +70,13 @@ public class ComposerActivity extends AppCompatActivity {
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff())
                 .setSelectedAccountName(settings.getString(PREF_ACCOUNT_NAME, null));
+        if (isGooglePlayServicesAvailable()) {
+            initComposer();
+        } else {
+            Toast.makeText(ComposerActivity.this,
+                    getText(R.string.composer_activity_google_play_services_warning),
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     private void prepareControls() {
@@ -142,18 +149,6 @@ public class ComposerActivity extends AppCompatActivity {
             mRecipientsEditText.setError(getString(R.string.composer_activity_recipient_address_error));
         }
         return result;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (isGooglePlayServicesAvailable()) {
-            initComposer();
-        } else {
-            Toast.makeText(ComposerActivity.this,
-                    getText(R.string.composer_activity_google_play_services_warning),
-                    Toast.LENGTH_LONG).show();
-        }
     }
 
     private void initComposer() {
