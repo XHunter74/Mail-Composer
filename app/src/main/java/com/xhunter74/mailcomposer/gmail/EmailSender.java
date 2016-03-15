@@ -43,8 +43,8 @@ public class EmailSender {
     private static final String CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding";
     private static final String BASE64 = "base64";
     private final MessageModel mMessageModel;
-    private Context mContext;
-    private GoogleAccountCredential mCredential;
+    private final Context mContext;
+    private final GoogleAccountCredential mCredential;
 
     public EmailSender(Context context, GoogleAccountCredential credential,
                        MessageModel messageModel) {
@@ -105,7 +105,7 @@ public class EmailSender {
         return email;
     }
 
-    public MimeMessage createEmailWithAttachment(MessageModel messageModel)
+    private MimeMessage createEmailWithAttachment(MessageModel messageModel)
             throws MessagingException, IOException {
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
@@ -136,7 +136,7 @@ public class EmailSender {
     }
 
     private Multipart addMessageAttachments(Multipart multipart, String[] attachments)
-            throws MessagingException, IOException {
+            throws MessagingException {
 
         for (String attachment : attachments) {
             MimeBodyPart mimeBodyPart = new MimeBodyPart();
