@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.xhunter74.mailcomposer.R;
@@ -18,19 +19,18 @@ import java.util.List;
  */
 public class AttachmentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private static final String TAG = AttachmentListAdapter.class.getName();
     private final Context mContext;
-    private final List<OnAttachmentLongClick> mOnAttachmentLongClicks;
+    private final List<OnDeleteButtonClick> mOnDeleteButtonClicks;
     private String[] mItems;
 
     public AttachmentListAdapter(Context context, String[] items) {
         mContext = context;
         mItems = items;
-        mOnAttachmentLongClicks = new ArrayList<>();
+        mOnDeleteButtonClicks = new ArrayList<>();
     }
 
-    public void setOnAttachmentLongClickListeners(OnAttachmentLongClick onAttachmentLongClick) {
-        mOnAttachmentLongClicks.add(onAttachmentLongClick);
+    public void setOnDeleteButtonClickListeners(OnDeleteButtonClick onDeleteButtonClick) {
+        mOnDeleteButtonClicks.add(onDeleteButtonClick);
     }
 
     public void setItems(String[] items) {
@@ -54,13 +54,12 @@ public class AttachmentListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         AttachmentViewHolder attachmentViewHolder = (AttachmentViewHolder) viewHolder;
         final String fileName = FileUtils.getFileName(mItems[position]);
         attachmentViewHolder.mFileName.setText(fileName);
-        attachmentViewHolder.mAttachmentContainer.setOnLongClickListener(new View.OnLongClickListener() {
+        attachmentViewHolder.mDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View v) {
-                for (OnAttachmentLongClick onAttachmentLongClick : mOnAttachmentLongClicks) {
-                    onAttachmentLongClick.onLongClick(position);
+            public void onClick(View v) {
+                for (OnDeleteButtonClick onDeleteButtonClick : mOnDeleteButtonClicks) {
+                    onDeleteButtonClick.onClick(position);
                 }
-                return false;
             }
         });
     }
@@ -74,19 +73,19 @@ public class AttachmentListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
     }
 
-    public interface OnAttachmentLongClick {
-        void onLongClick(int position);
+    public interface OnDeleteButtonClick {
+        void onClick(int position);
     }
 
     private class AttachmentViewHolder extends RecyclerView.ViewHolder {
 
-        public final View mAttachmentContainer;
         public final TextView mFileName;
+        public final ImageButton mDeleteButton;
 
         public AttachmentViewHolder(View view) {
             super(view);
-            mAttachmentContainer = view.findViewById(R.id.item_attachment_container);
             mFileName = (TextView) view.findViewById(R.id.item_attachment_file_name);
+            mDeleteButton = (ImageButton) view.findViewById(R.id.item_attachment_delete_button);
         }
     }
 }

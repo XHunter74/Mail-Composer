@@ -96,9 +96,9 @@ public class ComposerActivity extends AppCompatActivity {
     private void showAttachmentsDialog() {
         final AttachmentsDialog attachmentsDialog = AttachmentsDialog
                 .getDialogInstance(mAttachmentsList.toArray(new String[mAttachmentsList.size()]));
-        attachmentsDialog.setOnAttachmentLongClicks(new AttachmentListAdapter.OnAttachmentLongClick() {
+        attachmentsDialog.setOnDeleteButtonClicks(new AttachmentListAdapter.OnDeleteButtonClick() {
             @Override
-            public void onLongClick(int position) {
+            public void onClick(int position) {
                 mAttachmentsList.remove(position);
                 mAttachmentsTextView.setText(
                         String.format(getString(R.string.activity_composer_attachments),

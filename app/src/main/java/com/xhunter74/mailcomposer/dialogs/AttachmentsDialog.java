@@ -29,7 +29,7 @@ public class AttachmentsDialog extends DialogFragment {
     private ViewGroup mParent;
     private List<String> mAttachments;
     private AttachmentListAdapter mAttachmentListAdapter;
-    private List<AttachmentListAdapter.OnAttachmentLongClick> mOnAttachmentLongClicks;
+    private List<AttachmentListAdapter.OnDeleteButtonClick> mOnDeleteButtonClicks;
 
     public static AttachmentsDialog getDialogInstance(@NonNull String[] attachments) {
         AttachmentsDialog dialogFragment = new AttachmentsDialog();
@@ -39,12 +39,12 @@ public class AttachmentsDialog extends DialogFragment {
         return dialogFragment;
     }
 
-    public void setOnAttachmentLongClicks(
-            AttachmentListAdapter.OnAttachmentLongClick onAttachmentLongClick) {
-        if (mOnAttachmentLongClicks == null) {
-            mOnAttachmentLongClicks = new ArrayList<>();
+    public void setOnDeleteButtonClicks(
+            AttachmentListAdapter.OnDeleteButtonClick onDeleteButtonClick) {
+        if (mOnDeleteButtonClicks == null) {
+            mOnDeleteButtonClicks = new ArrayList<>();
         }
-        mOnAttachmentLongClicks.add(onAttachmentLongClick);
+        mOnDeleteButtonClicks.add(onDeleteButtonClick);
     }
 
     @Override
@@ -74,18 +74,18 @@ public class AttachmentsDialog extends DialogFragment {
     private void prepareDialogAdapter(View view) {
         mAttachmentListAdapter = new AttachmentListAdapter(
                 getActivity(), mAttachments.toArray(new String[mAttachments.size()]));
-        mAttachmentListAdapter.setOnAttachmentLongClickListeners(
-                new AttachmentListAdapter.OnAttachmentLongClick() {
+        mAttachmentListAdapter.setOnDeleteButtonClickListeners(
+                new AttachmentListAdapter.OnDeleteButtonClick() {
                     @Override
-                    public void onLongClick(int position) {
+                    public void onClick(int position) {
                         mAttachments.remove(position);
                         mAttachmentListAdapter
                                 .setItems(mAttachments.toArray(new String[mAttachments.size()]));
-                        for (AttachmentListAdapter.OnAttachmentLongClick onAttachmentLongClick
-                                : mOnAttachmentLongClicks) {
-                            onAttachmentLongClick.onLongClick(position);
+                        for (AttachmentListAdapter.OnDeleteButtonClick onDeleteButtonClick
+                                : mOnDeleteButtonClicks) {
+                            onDeleteButtonClick.onClick(position);
                         }
-                        if (mAttachments.size()==0){
+                        if (mAttachments.size() == 0) {
                             dismiss();
                         }
                     }
