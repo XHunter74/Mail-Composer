@@ -239,9 +239,16 @@ public class ComposerActivity extends AppCompatActivity {
     }
 
     private void addAttachments(String path) {
-        mAttachmentsList.add(path);
-        mAttachmentsTextView.setText(String.format(getString(R.string.activity_composer_attachments),
-                mAttachmentsList.size()));
+        if (!mAttachmentsList.contains(path)) {
+            mAttachmentsList.add(path);
+            mAttachmentsTextView
+                    .setText(String.format(getString(R.string.activity_composer_attachments),
+                            mAttachmentsList.size()));
+        } else {
+            Toast.makeText(ComposerActivity.this,
+                    getString(R.string.composer_activity_existed_attachment_warning),
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     private void chooseAccount() {
