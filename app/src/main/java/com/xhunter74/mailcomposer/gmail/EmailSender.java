@@ -37,11 +37,11 @@ import javax.mail.internet.MimeMultipart;
  */
 public class EmailSender {
     private static final String USER_ID = "me";
-    private static final String BODY_TYPE = "text/plain";
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String MESSAGE_CONTENT_TYPE = "text/plain; charset=\"UTF-8\"";
     private static final String CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding";
     private static final String BASE64 = "base64";
+    private static final String UTF8 = "UTF-8";
     private final MessageModel mMessageModel;
     private final Context mContext;
     private final GoogleAccountCredential mCredential;
@@ -100,8 +100,8 @@ public class EmailSender {
             email.addRecipient(javax.mail.Message.RecipientType.TO,
                     new InternetAddress(messageModel.getRecipientAddresses()[0]));
         }
-        email.setSubject(messageModel.getSubject());
-        email.setText(messageModel.getMessageBody());
+        email.setSubject(messageModel.getSubject(), UTF8);
+        email.setText(messageModel.getMessageBody(), UTF8);
         return email;
     }
 
@@ -121,10 +121,10 @@ public class EmailSender {
                     new InternetAddress(messageModel.getRecipientAddresses()[0]));
         }
 
-        email.setSubject(messageModel.getSubject());
+        email.setSubject(messageModel.getSubject(), UTF8);
 
         MimeBodyPart mimeBodyPart = new MimeBodyPart();
-        mimeBodyPart.setContent(messageModel.getMessageBody(), BODY_TYPE);
+        mimeBodyPart.setContent(messageModel.getMessageBody(), MESSAGE_CONTENT_TYPE);
         mimeBodyPart.setHeader(CONTENT_TYPE, MESSAGE_CONTENT_TYPE);
 
         Multipart multipart = new MimeMultipart();
