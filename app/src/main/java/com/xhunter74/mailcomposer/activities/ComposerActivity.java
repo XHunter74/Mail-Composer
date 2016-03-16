@@ -60,6 +60,18 @@ public class ComposerActivity extends AppCompatActivity {
     private TextView mAttachmentsTextView;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (isGooglePlayServicesAvailable()) {
+            initComposer();
+        } else {
+            Toast.makeText(ComposerActivity.this,
+                    getText(R.string.composer_activity_google_play_services_warning),
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_composer);
@@ -70,19 +82,18 @@ public class ComposerActivity extends AppCompatActivity {
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff())
                 .setSelectedAccountName(settings.getString(PREF_ACCOUNT_NAME, null));
-        if (isGooglePlayServicesAvailable()) {
-            initComposer();
-        } else {
-            Toast.makeText(ComposerActivity.this,
-                    getText(R.string.composer_activity_google_play_services_warning),
-                    Toast.LENGTH_LONG).show();
-        }
     }
 
     private void prepareControls() {
         mProgress = new ProgressDialog(this);
         mProgress.setMessage(getString(R.string.composer_activity_progress_dialog_message));
         mFromTextView = (TextView) findViewById(R.id.activity_composer_from);
+        mFromTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseAccount();
+            }
+        });
         mRecipientsEditText = (EditText) findViewById(R.id.activity_composer_to);
         mSubjectEditText = (EditText) findViewById(R.id.activity_composer_subject);
         mBodyEditText = (EditText) findViewById(R.id.activity_composer_body);
@@ -196,6 +207,7 @@ public class ComposerActivity extends AppCompatActivity {
                 }
                 break;
             case REQUEST_ACCOUNT_PICKER:
+                String oldAccountName = mFromTextView.getText().toString();
                 if (resultCode == RESULT_OK && data != null && data.getExtras() != null) {
                     String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
                     if (accountName != null) {
@@ -205,7 +217,7 @@ public class ComposerActivity extends AppCompatActivity {
                         editor.putString(PREF_ACCOUNT_NAME, accountName);
                         editor.apply();
                     }
-                } else if (resultCode == RESULT_CANCELED) {
+                } else if (resultCode == RESULT_CANCELED && TextUtils.isEmpty(oldAccountName)) {
                     Toast.makeText(ComposerActivity.this,
                             getString(R.string.composer_activity_account_unspecified),
                             Toast.LENGTH_LONG).show();
