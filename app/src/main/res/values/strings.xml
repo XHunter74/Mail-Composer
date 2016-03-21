@@ -22,4 +22,5 @@
     <string name="composer_activity_file_doesnt_exist_message">File %s does not exist.</string>
     <string name="action_add_attachment">Add attachment</string>
     <string name="composer_activity_existed_attachment_warning">This file already exist in the attachment.</string>
+    <string name="composer_activity_recipient_address_invalid_email">Incorrect email(s)</string>
 </resources>

@@ -6,8 +6,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,6 +31,7 @@ import com.xhunter74.mailcomposer.dialogs.AttachmentsDialog;
 import com.xhunter74.mailcomposer.gmail.EmailSender;
 import com.xhunter74.mailcomposer.models.MessageModel;
 import com.xhunter74.mailcomposer.utils.FileUtils;
+import com.xhunter74.mailcomposer.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -127,7 +126,7 @@ public class ComposerActivity extends AppCompatActivity {
     }
 
     private void verifyFormAndSendEmail() {
-        if (isDeviceOnline()) {
+        if (Utils.isDeviceOnline(ComposerActivity.this)) {
             if (isCompleteForm()) {
                 sendEmail();
             }
@@ -155,9 +154,13 @@ public class ComposerActivity extends AppCompatActivity {
             result = false;
             mFromTextView.setError(getString(R.string.composer_activity_from_address_empty_error));
         }
-        if (TextUtils.isEmpty(mRecipientsEditText.getText())) {
+        String emails = mRecipientsEditText.getText().toString();
+        if (TextUtils.isEmpty(emails)) {
             result = false;
             mRecipientsEditText.setError(getString(R.string.composer_activity_recipient_address_error));
+        } else if (!Utils.isValidEmails(emails)) {
+            result = false;
+            mRecipientsEditText.setError(getString(R.string.composer_activity_recipient_address_invalid_email));
         }
         return result;
     }
@@ -168,13 +171,6 @@ public class ComposerActivity extends AppCompatActivity {
         } else {
             mFromTextView.setText(mCredential.getSelectedAccountName());
         }
-    }
-
-    private boolean isDeviceOnline() {
-        ConnectivityManager connMgr =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
     }
 
     private boolean isGooglePlayServicesAvailable() {

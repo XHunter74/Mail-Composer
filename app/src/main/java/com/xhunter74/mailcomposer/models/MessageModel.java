@@ -2,6 +2,8 @@ package com.xhunter74.mailcomposer.models;
 
 import android.text.TextUtils;
 
+import com.xhunter74.mailcomposer.utils.Utils;
+
 /**
  * Created by Serhiy.Krasovskyy on 13.03.2016.
  */
@@ -25,14 +27,7 @@ public class MessageModel {
     }
 
     public void setRecipientAddresses(String addresses) {
-        if (!TextUtils.isEmpty(addresses)) {
-            addresses = addresses.replace(',', ';');
-            if (addresses.contains(";")) {
-                mRecipientAddresses = addresses.split(";");
-            } else {
-                mRecipientAddresses = new String[]{addresses};
-            }
-        }
+        mRecipientAddresses = Utils.getEmailsFromString(addresses);
     }
 
     public String getSubject() {
