@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,99 +11,106 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".activities.ComposerActivity">
 
-    <TextView
-        android:id="@+id/activity_composer_from_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/activity_composer_from_label"
-        android:textColor="@color/black"
-        android:textSize="16sp"/>
-
-    <TextView
-        android:id="@+id/activity_composer_from"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_toRightOf="@+id/activity_composer_subject_label"
-        android:textSize="16sp"/>
-
-    <TextView
-        android:id="@+id/activity_composer_to_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/activity_composer_from_label"
-        android:layout_marginTop="20dp"
-        android:text="@string/activity_composer_to_label"
-        android:textColor="@color/black"
-        android:textSize="16sp"/>
-
-    <EditText
-        android:id="@+id/activity_composer_to"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/activity_composer_from_label"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_toRightOf="@+id/activity_composer_subject_label"
-        android:hint="@string/activity_composer_to_hint"
-        android:inputType="textEmailAddress"
-        android:textSize="16sp"/>
-
-    <TextView
-        android:id="@+id/activity_composer_subject_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/activity_composer_to_label"
-        android:layout_marginTop="20dp"
-        android:text="@string/activity_composer_subject_label"
-        android:textColor="@color/black"
-        android:textSize="16sp"/>
-
-    <EditText
-        android:id="@+id/activity_composer_subject"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/activity_composer_to_label"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_toRightOf="@+id/activity_composer_subject_label"
-        android:hint="@string/activity_composer_subject_hint"
-        android:textSize="16sp"/>
-
-    <TextView
-        android:id="@+id/activity_composer_attachments_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/activity_composer_subject_label"
-        android:layout_marginTop="20dp"
-        android:text="@string/activity_composer_attachments_label"
-        android:textColor="@color/black"
-        android:textSize="16sp"/>
-
-    <TextView
-        android:id="@+id/activity_composer_attachments"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/activity_composer_subject_label"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="20dp"
-        android:layout_toRightOf="@+id/activity_composer_attachments_label"
-        android:gravity="center_vertical"
-        android:text="@string/activity_composer_attachments"
-        android:textSize="16sp"/>
-
-    <EditText
-        android:id="@+id/activity_composer_body"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/activity_composer_attachments_label"
-        android:layout_marginTop="20dp"
-        android:gravity="top"
-        android:hint="@string/activity_composer_body_hint"
-        android:inputType="textMultiLine"
-        android:isScrollContainer="true"
-        android:textSize="16sp"/>
+        android:layout_height="match_parent">
 
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/activity_composer_from_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/activity_composer_from_label"
+            android:textColor="@color/black"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/activity_composer_from"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/activity_composer_subject_label"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/activity_composer_to_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/activity_composer_from_label"
+            android:layout_marginTop="20dp"
+            android:text="@string/activity_composer_to_label"
+            android:textColor="@color/black"
+            android:textSize="16sp"/>
+
+        <EditText
+            android:id="@+id/activity_composer_to"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/activity_composer_from_label"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/activity_composer_subject_label"
+            android:hint="@string/activity_composer_to_hint"
+            android:inputType="textEmailAddress"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/activity_composer_subject_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/activity_composer_to_label"
+            android:layout_marginTop="20dp"
+            android:text="@string/activity_composer_subject_label"
+            android:textColor="@color/black"
+            android:textSize="16sp"/>
+
+        <EditText
+            android:id="@+id/activity_composer_subject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/activity_composer_to_label"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/activity_composer_subject_label"
+            android:hint="@string/activity_composer_subject_hint"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/activity_composer_attachments_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/activity_composer_subject_label"
+            android:layout_marginTop="20dp"
+            android:text="@string/activity_composer_attachments_label"
+            android:textColor="@color/black"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/activity_composer_attachments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/activity_composer_subject_label"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="20dp"
+            android:layout_toRightOf="@+id/activity_composer_attachments_label"
+            android:gravity="center_vertical"
+            android:text="@string/activity_composer_attachments"
+            android:textSize="16sp"/>
+
+        <EditText
+            android:id="@+id/activity_composer_body"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/activity_composer_attachments_label"
+            android:layout_marginTop="20dp"
+            android:gravity="top"
+            android:hint="@string/activity_composer_body_hint"
+            android:inputType="textMultiLine"
+            android:isScrollContainer="true"
+            android:minHeight="200dp"
+            android:textSize="16sp"/>
+
+
+    </RelativeLayout>
+</ScrollView>
