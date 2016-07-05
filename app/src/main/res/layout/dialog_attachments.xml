@@ -1,28 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="16dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:id="@+id/dialog_attachments_title"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@color/colorPrimary"
-        android:gravity="center_vertical"
-        android:paddingLeft="5dp"
-        android:text="@string/dialog_attachments_title"
-        android:textColor="@color/white"
-        android:textSize="20sp"/>
+        android:layout_height="match_parent"
+        android:paddingBottom="16dp">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/dialog_attachments_attachments_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/dialog_attachments_title"
-        android:layout_marginTop="10dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:scrollbars="vertical"/>
+        <TextView
+            android:id="@+id/dialog_attachments_title"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/colorPrimary"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dp"
+            android:text="@string/dialog_attachments_title"
+            android:textColor="@color/white"
+            android:textSize="20sp"/>
 
-</RelativeLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/dialog_attachments_attachments_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/dialog_attachments_title"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:scrollbars="vertical"/>
+
+    </RelativeLayout>
+</layout>

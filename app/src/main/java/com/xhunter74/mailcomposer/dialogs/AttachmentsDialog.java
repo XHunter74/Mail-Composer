@@ -3,17 +3,18 @@ package com.xhunter74.mailcomposer.dialogs;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.xhunter74.mailcomposer.R;
 import com.xhunter74.mailcomposer.adapters.AttachmentListAdapter;
+import com.xhunter74.mailcomposer.databinding.DialogAttachmentsBinding;
 import com.xhunter74.mailcomposer.utils.Constants;
 
 import java.util.ArrayList;
@@ -61,19 +62,19 @@ public class AttachmentsDialog extends DialogFragment {
         assert attachments != null;
         mAttachments.addAll(Arrays.asList(attachments));
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.dialog_attachments, mParent);
-        builder.setView(view);
-        prepareDialogAdapter(view);
+        DialogAttachmentsBinding binding = DataBindingUtil.inflate(
+                LayoutInflater.from(getActivity()), R.layout.dialog_attachments, mParent, false);
+        builder.setView(binding.getRoot());
+        prepareDialogAdapter(binding);
         Dialog dialog = builder.create();
         dialog.setCanceledOnTouchOutside(true);
         return dialog;
     }
 
     @SuppressLint("NewApi")
-    private void prepareDialogAdapter(View view) {
+    private void prepareDialogAdapter(DialogAttachmentsBinding viewBinding) {
         mAttachmentListAdapter = new AttachmentListAdapter(
-                getActivity(), mAttachments.toArray(new String[mAttachments.size()]));
+                mAttachments.toArray(new String[mAttachments.size()]));
         mAttachmentListAdapter.setOnDeleteButtonClickListeners(
                 new AttachmentListAdapter.OnDeleteButtonClick() {
                     @Override
@@ -90,11 +91,9 @@ public class AttachmentsDialog extends DialogFragment {
                         }
                     }
                 });
-        RecyclerView attachmentsList = (RecyclerView)
-                view.findViewById(R.id.dialog_attachments_attachments_list);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(
-                view.getContext(), LinearLayoutManager.VERTICAL, false);
-        attachmentsList.setLayoutManager(layoutManager);
-        attachmentsList.setAdapter(mAttachmentListAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(viewBinding.getRoot().getContext(),
+                LinearLayoutManager.VERTICAL, false);
+        viewBinding.dialogAttachmentsAttachmentsList.setLayoutManager(layoutManager);
+        viewBinding.dialogAttachmentsAttachmentsList.setAdapter(mAttachmentListAdapter);
     }
 }
