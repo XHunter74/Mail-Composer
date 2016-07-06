@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.xhunter74.mailcomposer.R;
 import com.xhunter74.mailcomposer.databinding.ItemAttachmentBinding;
-import com.xhunter74.mailcomposer.utils.FileUtils;
+import com.xhunter74.mailcomposer.models.AttachmentModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +21,9 @@ import java.util.List;
 public class AttachmentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final List<OnDeleteButtonClick> mOnDeleteButtonClicks;
-    private String[] mItems;
+    private AttachmentModel[] mItems;
 
-    public AttachmentListAdapter(String[] items) {
+    public AttachmentListAdapter(AttachmentModel[] items) {
         mItems = items;
         mOnDeleteButtonClicks = new ArrayList<>();
     }
@@ -32,7 +32,7 @@ public class AttachmentListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         mOnDeleteButtonClicks.add(onDeleteButtonClick);
     }
 
-    public void setItems(String[] items) {
+    public void setItems(AttachmentModel[] items) {
         mItems = items;
         notifyDataSetChanged();
     }
@@ -53,8 +53,8 @@ public class AttachmentListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     private void prepareAttachmentViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
         AttachmentViewHolder attachmentViewHolder = (AttachmentViewHolder) viewHolder;
-        final String fileName = FileUtils.getFileName(mItems[position]);
-        attachmentViewHolder.mFileName.setText(fileName);
+        final AttachmentModel attachment = mItems[position];
+        attachmentViewHolder.mFileName.setText(attachment.getFileName());
         attachmentViewHolder.mDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

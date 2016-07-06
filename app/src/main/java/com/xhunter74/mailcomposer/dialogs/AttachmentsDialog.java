@@ -15,10 +15,10 @@ import android.view.ViewGroup;
 import com.xhunter74.mailcomposer.R;
 import com.xhunter74.mailcomposer.adapters.AttachmentListAdapter;
 import com.xhunter74.mailcomposer.databinding.DialogAttachmentsBinding;
+import com.xhunter74.mailcomposer.models.AttachmentModel;
 import com.xhunter74.mailcomposer.utils.Constants;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,7 +28,7 @@ public class AttachmentsDialog extends DialogFragment {
 
     public static final String TAG = AttachmentsDialog.class.getName();
     private ViewGroup mParent;
-    private List<String> mAttachments;
+    private List<AttachmentModel> mAttachments;
     private AttachmentListAdapter mAttachmentListAdapter;
     private List<AttachmentListAdapter.OnDeleteButtonClick> mOnDeleteButtonClicks;
 
@@ -59,8 +59,9 @@ public class AttachmentsDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         mAttachments = new ArrayList<>();
         String[] attachments = getArguments().getStringArray(Constants.Extras.ATTACHMENTS);
-        assert attachments != null;
-        mAttachments.addAll(Arrays.asList(attachments));
+        for (String filePath : attachments) {
+            mAttachments.add(new AttachmentModel(filePath));
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         DialogAttachmentsBinding binding = DataBindingUtil.inflate(
                 LayoutInflater.from(getActivity()), R.layout.dialog_attachments, mParent, false);
@@ -74,14 +75,14 @@ public class AttachmentsDialog extends DialogFragment {
     @SuppressLint("NewApi")
     private void prepareDialogAdapter(DialogAttachmentsBinding viewBinding) {
         mAttachmentListAdapter = new AttachmentListAdapter(
-                mAttachments.toArray(new String[mAttachments.size()]));
+                mAttachments.toArray(new AttachmentModel[mAttachments.size()]));
         mAttachmentListAdapter.setOnDeleteButtonClickListeners(
                 new AttachmentListAdapter.OnDeleteButtonClick() {
                     @Override
                     public void onClick(int position) {
                         mAttachments.remove(position);
                         mAttachmentListAdapter
-                                .setItems(mAttachments.toArray(new String[mAttachments.size()]));
+                                .setItems(mAttachments.toArray(new AttachmentModel[mAttachments.size()]));
                         for (AttachmentListAdapter.OnDeleteButtonClick onDeleteButtonClick
                                 : mOnDeleteButtonClicks) {
                             onDeleteButtonClick.onClick(position);
