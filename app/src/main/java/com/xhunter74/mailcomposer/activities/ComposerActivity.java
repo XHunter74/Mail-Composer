@@ -25,7 +25,7 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecovera
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.gmail.GmailScopes;
 import com.xhunter74.mailcomposer.R;
-import com.xhunter74.mailcomposer.adapters.AttachmentListAdapter;
+import com.xhunter74.mailcomposer.adapters.OnDeleteButtonClick;
 import com.xhunter74.mailcomposer.databinding.ActivityComposerBinding;
 import com.xhunter74.mailcomposer.dialogs.AttachmentsDialog;
 import com.xhunter74.mailcomposer.gmail.EmailSender;
@@ -105,7 +105,7 @@ public class ComposerActivity extends AppCompatActivity {
     private void showAttachmentsDialog() {
         final AttachmentsDialog attachmentsDialog = AttachmentsDialog
                 .getDialogInstance(mAttachmentsList.toArray(new AttachmentModel[mAttachmentsList.size()]));
-        attachmentsDialog.setOnDeleteButtonClicks(new AttachmentListAdapter.OnDeleteButtonClick() {
+        attachmentsDialog.setOnDeleteButtonClicks(new OnDeleteButtonClick() {
             @Override
             public void onClick(int position) {
                 mAttachmentsList.remove(position);
@@ -239,7 +239,7 @@ public class ComposerActivity extends AppCompatActivity {
     }
 
     private void addAttachments(String path) {
-        if (!mAttachmentsList.contains(path)) {
+        if (!mAttachmentsList.contains(new AttachmentModel(path))) {
             mAttachmentsList.add(new AttachmentModel(path));
             mBinding.activityComposerAttachments
                     .setText(String.format(getString(R.string.activity_composer_attachments),
