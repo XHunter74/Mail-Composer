@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <data>
+
+        <variable
+            name="attachment"
+            type="com.xhunter74.mailcomposer.models.AttachmentModel"/>
+        <variable name="deleteButtonClick" type="android.view.View.OnClickListener" />
+    </data>
+
     <RelativeLayout
         android:id="@+id/item_attachment_container"
         android:layout_width="wrap_content"
@@ -29,7 +37,7 @@
             android:layout_marginRight="5dp"
             android:layout_toLeftOf="@+id/item_attachment_delete_button"
             android:layout_toRightOf="@+id/item_attachment_attachment_icon"
-            android:text="sample_file.txt"
+            android:text="@{attachment.getFileName}"
             android:textSize="16sp"/>
 
         <ImageButton
@@ -37,6 +45,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"
+            android:onClick="@{deleteButtonClick.onClick}"
             android:layout_centerVertical="true"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_delete_black_24dp"/>
