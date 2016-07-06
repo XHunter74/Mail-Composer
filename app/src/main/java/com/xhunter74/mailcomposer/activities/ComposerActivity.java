@@ -29,6 +29,7 @@ import com.xhunter74.mailcomposer.adapters.AttachmentListAdapter;
 import com.xhunter74.mailcomposer.databinding.ActivityComposerBinding;
 import com.xhunter74.mailcomposer.dialogs.AttachmentsDialog;
 import com.xhunter74.mailcomposer.gmail.EmailSender;
+import com.xhunter74.mailcomposer.models.AttachmentModel;
 import com.xhunter74.mailcomposer.models.MessageModel;
 import com.xhunter74.mailcomposer.utils.FileUtils;
 import com.xhunter74.mailcomposer.utils.Utils;
@@ -51,7 +52,7 @@ public class ComposerActivity extends AppCompatActivity {
     private static final String[] SCOPES = {GmailScopes.GMAIL_COMPOSE};
     private GoogleAccountCredential mCredential;
     private ProgressDialog mProgress;
-    private List<String> mAttachmentsList;
+    private List<AttachmentModel> mAttachmentsList;
     private ActivityComposerBinding mBinding;
 
     @Override
@@ -103,7 +104,7 @@ public class ComposerActivity extends AppCompatActivity {
 
     private void showAttachmentsDialog() {
         final AttachmentsDialog attachmentsDialog = AttachmentsDialog
-                .getDialogInstance(mAttachmentsList.toArray(new String[mAttachmentsList.size()]));
+                .getDialogInstance(mAttachmentsList.toArray(new AttachmentModel[mAttachmentsList.size()]));
         attachmentsDialog.setOnDeleteButtonClicks(new AttachmentListAdapter.OnDeleteButtonClick() {
             @Override
             public void onClick(int position) {
@@ -134,7 +135,7 @@ public class ComposerActivity extends AppCompatActivity {
         messageModel.setRecipientAddresses(mBinding.activityComposerTo.getText().toString());
         messageModel.setSubject(mBinding.activityComposerSubject.getText().toString());
         messageModel.setMessageBody(mBinding.activityComposerBody.getText().toString());
-        messageModel.setAttachments(mAttachmentsList.toArray(new String[mAttachmentsList.size()]));
+        messageModel.setAttachments(mAttachmentsList.toArray(new AttachmentModel[mAttachmentsList.size()]));
         EmailSender emailSender = new EmailSender(ComposerActivity.this, mCredential, messageModel);
         new SendEmailTask().execute(emailSender);
     }
@@ -239,7 +240,7 @@ public class ComposerActivity extends AppCompatActivity {
 
     private void addAttachments(String path) {
         if (!mAttachmentsList.contains(path)) {
-            mAttachmentsList.add(path);
+            mAttachmentsList.add(new AttachmentModel(path));
             mBinding.activityComposerAttachments
                     .setText(String.format(getString(R.string.activity_composer_attachments),
                             mAttachmentsList.size()));

@@ -32,12 +32,20 @@ public class AttachmentsDialog extends DialogFragment {
     private AttachmentListAdapter mAttachmentListAdapter;
     private List<AttachmentListAdapter.OnDeleteButtonClick> mOnDeleteButtonClicks;
 
-    public static AttachmentsDialog getDialogInstance(@NonNull String[] attachments) {
+    public static AttachmentsDialog getDialogInstance(@NonNull AttachmentModel[] attachments) {
         AttachmentsDialog dialogFragment = new AttachmentsDialog();
         Bundle bundle = new Bundle();
-        bundle.putStringArray(Constants.Extras.ATTACHMENTS, attachments);
+        bundle.putStringArray(Constants.Extras.ATTACHMENTS, getStringAttachmentsArray(attachments));
         dialogFragment.setArguments(bundle);
         return dialogFragment;
+    }
+
+    private static String[] getStringAttachmentsArray(AttachmentModel[] attachments) {
+        String[] result = new String[attachments.length];
+        for (int i = 0; i < attachments.length; i++) {
+            result[i] = attachments[i].path;
+        }
+        return result;
     }
 
     public void setOnDeleteButtonClicks(

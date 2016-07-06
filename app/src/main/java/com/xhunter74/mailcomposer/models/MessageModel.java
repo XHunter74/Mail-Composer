@@ -12,7 +12,7 @@ public class MessageModel {
     private String[] mRecipientAddresses;
     private String mSubject;
     private String mMessageBody;
-    private String[] mAttachments;
+    private AttachmentModel[] mAttachments;
 
     public String getFromAddress() {
         return mFromAddress;
@@ -46,11 +46,11 @@ public class MessageModel {
         this.mMessageBody = messageBody;
     }
 
-    public String[] getAttachments() {
+    public AttachmentModel[] getAttachments() {
         return mAttachments;
     }
 
-    public void setAttachments(String[] attachments) {
+    public void setAttachments(AttachmentModel[] attachments) {
         mAttachments = attachments;
     }
 }

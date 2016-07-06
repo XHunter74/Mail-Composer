@@ -11,6 +11,7 @@ import com.google.api.client.util.Base64;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.Message;
 import com.xhunter74.mailcomposer.R;
+import com.xhunter74.mailcomposer.models.AttachmentModel;
 import com.xhunter74.mailcomposer.models.MessageModel;
 import com.xhunter74.mailcomposer.utils.FileUtils;
 
@@ -135,16 +136,16 @@ public class EmailSender {
         return email;
     }
 
-    private Multipart addMessageAttachments(Multipart multipart, String[] attachments)
+    private Multipart addMessageAttachments(Multipart multipart, AttachmentModel[] attachments)
             throws MessagingException {
 
-        for (String attachment : attachments) {
+        for (AttachmentModel attachment : attachments) {
             MimeBodyPart mimeBodyPart = new MimeBodyPart();
-            DataSource source = new FileDataSource(attachment);
+            DataSource source = new FileDataSource(attachment.path);
             mimeBodyPart.setDataHandler(new DataHandler(source));
-            String fileName = FileUtils.getFileName(attachment);
+            String fileName = FileUtils.getFileName(attachment.path);
             mimeBodyPart.setFileName(fileName);
-            String contentType = FileUtils.getContentType(attachment);
+            String contentType = FileUtils.getContentType(attachment.path);
             mimeBodyPart.setHeader(CONTENT_TYPE, contentType + "; name=\"" + fileName + "\"");
             mimeBodyPart.setHeader(CONTENT_TRANSFER_ENCODING, BASE64);
             multipart.addBodyPart(mimeBodyPart);

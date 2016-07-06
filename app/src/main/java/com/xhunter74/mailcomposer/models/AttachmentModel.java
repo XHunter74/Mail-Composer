@@ -5,7 +5,8 @@ import android.text.TextUtils;
 import com.xhunter74.mailcomposer.utils.FileUtils;
 
 public class AttachmentModel {
-    private String path;
+
+    public String path;
 
     public AttachmentModel(String path) {
         this.path = path;
