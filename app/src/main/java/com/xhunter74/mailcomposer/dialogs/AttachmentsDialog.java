@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.xhunter74.mailcomposer.R;
 import com.xhunter74.mailcomposer.adapters.AttachmentListAdapter;
+import com.xhunter74.mailcomposer.adapters.OnDeleteButtonClick;
 import com.xhunter74.mailcomposer.databinding.DialogAttachmentsBinding;
 import com.xhunter74.mailcomposer.models.AttachmentModel;
 import com.xhunter74.mailcomposer.utils.Constants;
@@ -30,7 +31,7 @@ public class AttachmentsDialog extends DialogFragment {
     private ViewGroup mParent;
     private List<AttachmentModel> mAttachments;
     private AttachmentListAdapter mAttachmentListAdapter;
-    private List<AttachmentListAdapter.OnDeleteButtonClick> mOnDeleteButtonClicks;
+    private List<OnDeleteButtonClick> mOnDeleteButtonClicks;
 
     public static AttachmentsDialog getDialogInstance(@NonNull AttachmentModel[] attachments) {
         AttachmentsDialog dialogFragment = new AttachmentsDialog();
@@ -48,8 +49,7 @@ public class AttachmentsDialog extends DialogFragment {
         return result;
     }
 
-    public void setOnDeleteButtonClicks(
-            AttachmentListAdapter.OnDeleteButtonClick onDeleteButtonClick) {
+    public void setOnDeleteButtonClicks(OnDeleteButtonClick onDeleteButtonClick) {
         if (mOnDeleteButtonClicks == null) {
             mOnDeleteButtonClicks = new ArrayList<>();
         }
@@ -84,22 +84,21 @@ public class AttachmentsDialog extends DialogFragment {
     private void prepareDialogAdapter(DialogAttachmentsBinding viewBinding) {
         mAttachmentListAdapter = new AttachmentListAdapter(
                 mAttachments.toArray(new AttachmentModel[mAttachments.size()]));
-        mAttachmentListAdapter.setOnDeleteButtonClickListeners(
-                new AttachmentListAdapter.OnDeleteButtonClick() {
-                    @Override
-                    public void onClick(int position) {
-                        mAttachments.remove(position);
-                        mAttachmentListAdapter
-                                .setItems(mAttachments.toArray(new AttachmentModel[mAttachments.size()]));
-                        for (AttachmentListAdapter.OnDeleteButtonClick onDeleteButtonClick
-                                : mOnDeleteButtonClicks) {
-                            onDeleteButtonClick.onClick(position);
-                        }
-                        if (mAttachments.size() == 0) {
-                            dismiss();
-                        }
-                    }
-                });
+        mAttachmentListAdapter.setOnDeleteButtonClickListeners(new OnDeleteButtonClick() {
+            @Override
+            public void onClick(int position) {
+                mAttachments.remove(position);
+                mAttachmentListAdapter
+                        .setItems(mAttachments.toArray(new AttachmentModel[mAttachments.size()]));
+                for (OnDeleteButtonClick onDeleteButtonClick
+                        : mOnDeleteButtonClicks) {
+                    onDeleteButtonClick.onClick(position);
+                }
+                if (mAttachments.size() == 0) {
+                    dismiss();
+                }
+            }
+        });
         LinearLayoutManager layoutManager = new LinearLayoutManager(viewBinding.getRoot().getContext(),
                 LinearLayoutManager.VERTICAL, false);
         viewBinding.dialogAttachmentsAttachmentsList.setLayoutManager(layoutManager);
