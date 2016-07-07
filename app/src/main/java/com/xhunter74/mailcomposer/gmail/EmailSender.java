@@ -56,7 +56,7 @@ public class EmailSender {
 
     public void sendEmail() throws MessagingException, IOException {
         MimeMessage mimeMessage;
-        if (mMessageModel.getAttachments().length > 0) {
+        if (mMessageModel.getAttachments().size() > 0) {
             mimeMessage = createEmailWithAttachment(mMessageModel);
         } else {
             mimeMessage = createEmail(mMessageModel);
@@ -94,12 +94,12 @@ public class EmailSender {
         MimeMessage email = new MimeMessage(session);
 
         email.setFrom(new InternetAddress(messageModel.getFromAddress()));
-        if (messageModel.getRecipientAddresses().length > 1) {
-            InternetAddress[] addresses = getInternetAddresses(messageModel.getRecipientAddresses());
+        if (messageModel.getRecipientAddressesArray().length > 1) {
+            InternetAddress[] addresses = getInternetAddresses(messageModel.getRecipientAddressesArray());
             email.addRecipients(javax.mail.Message.RecipientType.TO, addresses);
         } else {
             email.addRecipient(javax.mail.Message.RecipientType.TO,
-                    new InternetAddress(messageModel.getRecipientAddresses()[0]));
+                    new InternetAddress(messageModel.getRecipientAddressesArray()[0]));
         }
         email.setSubject(messageModel.getSubject(), UTF8);
         email.setText(messageModel.getMessageBody(), UTF8);
@@ -114,12 +114,12 @@ public class EmailSender {
         MimeMessage email = new MimeMessage(session);
 
         email.setFrom(new InternetAddress(messageModel.getFromAddress()));
-        if (messageModel.getRecipientAddresses().length > 1) {
-            InternetAddress[] addresses = getInternetAddresses(messageModel.getRecipientAddresses());
+        if (messageModel.getRecipientAddressesArray().length > 1) {
+            InternetAddress[] addresses = getInternetAddresses(messageModel.getRecipientAddressesArray());
             email.addRecipients(javax.mail.Message.RecipientType.TO, addresses);
         } else {
             email.addRecipient(javax.mail.Message.RecipientType.TO,
-                    new InternetAddress(messageModel.getRecipientAddresses()[0]));
+                    new InternetAddress(messageModel.getRecipientAddressesArray()[0]));
         }
 
         email.setSubject(messageModel.getSubject(), UTF8);
@@ -136,7 +136,7 @@ public class EmailSender {
         return email;
     }
 
-    private Multipart addMessageAttachments(Multipart multipart, AttachmentModel[] attachments)
+    private Multipart addMessageAttachments(Multipart multipart, List<AttachmentModel> attachments)
             throws MessagingException {
 
         for (AttachmentModel attachment : attachments) {

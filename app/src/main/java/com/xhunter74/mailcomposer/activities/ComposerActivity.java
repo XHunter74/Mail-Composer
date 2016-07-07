@@ -36,9 +36,7 @@ import com.xhunter74.mailcomposer.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import javax.mail.MessagingException;
 
@@ -52,8 +50,8 @@ public class ComposerActivity extends AppCompatActivity {
     private static final String[] SCOPES = {GmailScopes.GMAIL_COMPOSE};
     private GoogleAccountCredential mCredential;
     private ProgressDialog mProgress;
-    private List<AttachmentModel> mAttachmentsList;
     private ActivityComposerBinding mBinding;
+    private MessageModel mMessageModel;
 
     @Override
     protected void onResume() {
@@ -71,7 +69,8 @@ public class ComposerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_composer);
-        mAttachmentsList = new ArrayList<>();
+        mMessageModel = new MessageModel();
+        mBinding.setMessage(mMessageModel);
         prepareControls();
         SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
         mCredential = GoogleAccountCredential.usingOAuth2(
@@ -91,11 +90,11 @@ public class ComposerActivity extends AppCompatActivity {
         });
         mBinding.activityComposerAttachments.setText(
                 String.format(getString(R.string.activity_composer_attachments),
-                        mAttachmentsList.size()));
+                        mMessageModel.getAttachments().size()));
         mBinding.activityComposerAttachments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mAttachmentsList.size() > 0) {
+                if (mMessageModel.getAttachments().size() > 0) {
                     showAttachmentsDialog();
                 }
             }
@@ -104,14 +103,14 @@ public class ComposerActivity extends AppCompatActivity {
 
     private void showAttachmentsDialog() {
         final AttachmentsDialog attachmentsDialog = AttachmentsDialog
-                .getDialogInstance(mAttachmentsList.toArray(new AttachmentModel[mAttachmentsList.size()]));
+                .getDialogInstance(mMessageModel.getAttachments().toArray(new AttachmentModel[mMessageModel.getAttachments().size()]));
         attachmentsDialog.setOnDeleteButtonClicks(new OnDeleteButtonClick() {
             @Override
             public void onClick(int position) {
-                mAttachmentsList.remove(position);
+                mMessageModel.getAttachments().remove(position);
                 mBinding.activityComposerAttachments.setText(
                         String.format(getString(R.string.activity_composer_attachments),
-                                mAttachmentsList.size()));
+                                mMessageModel.getAttachments().size()));
             }
         });
         attachmentsDialog.show(getFragmentManager(), AttachmentsDialog.TAG);
@@ -130,27 +129,20 @@ public class ComposerActivity extends AppCompatActivity {
     }
 
     private void sendEmail() {
-        MessageModel messageModel = new MessageModel();
-        messageModel.setFromAddress(mBinding.activityComposerFrom.getText().toString());
-        messageModel.setRecipientAddresses(mBinding.activityComposerTo.getText().toString());
-        messageModel.setSubject(mBinding.activityComposerSubject.getText().toString());
-        messageModel.setMessageBody(mBinding.activityComposerBody.getText().toString());
-        messageModel.setAttachments(mAttachmentsList.toArray(new AttachmentModel[mAttachmentsList.size()]));
-        EmailSender emailSender = new EmailSender(ComposerActivity.this, mCredential, messageModel);
+        EmailSender emailSender = new EmailSender(ComposerActivity.this, mCredential, mMessageModel);
         new SendEmailTask().execute(emailSender);
     }
 
     private boolean isCompleteForm() {
         boolean result = true;
-        if (TextUtils.isEmpty(mBinding.activityComposerFrom.getText())) {
+        if (TextUtils.isEmpty(mMessageModel.getFromAddress())) {
             result = false;
             mBinding.activityComposerFrom.setError(getString(R.string.composer_activity_from_address_empty_error));
         }
-        String emails = mBinding.activityComposerTo.getText().toString();
-        if (TextUtils.isEmpty(emails)) {
+        if (TextUtils.isEmpty(mMessageModel.getRecipientAddresses())) {
             result = false;
             mBinding.activityComposerTo.setError(getString(R.string.composer_activity_recipient_address_error));
-        } else if (!Utils.isValidEmails(emails)) {
+        } else if (!Utils.isValidEmails(mMessageModel.getRecipientAddresses())) {
             result = false;
             mBinding.activityComposerTo.setError(getString(R.string.composer_activity_recipient_address_invalid_email));
         }
@@ -161,7 +153,7 @@ public class ComposerActivity extends AppCompatActivity {
         if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else {
-            mBinding.activityComposerFrom.setText(mCredential.getSelectedAccountName());
+            mMessageModel.setFromAddress(mCredential.getSelectedAccountName());
         }
     }
 
@@ -195,7 +187,7 @@ public class ComposerActivity extends AppCompatActivity {
                 }
                 break;
             case REQUEST_ACCOUNT_PICKER:
-                String oldAccountName = mBinding.activityComposerFrom.getText().toString();
+                String oldAccountName = mMessageModel.getFromAddress();
                 if (resultCode == RESULT_OK && data != null && data.getExtras() != null) {
                     String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
                     if (accountName != null) {
@@ -239,11 +231,11 @@ public class ComposerActivity extends AppCompatActivity {
     }
 
     private void addAttachments(String path) {
-        if (!mAttachmentsList.contains(new AttachmentModel(path))) {
-            mAttachmentsList.add(new AttachmentModel(path));
+        if (!mMessageModel.getAttachments().contains(new AttachmentModel(path))) {
+            mMessageModel.getAttachments().add(new AttachmentModel(path));
             mBinding.activityComposerAttachments
                     .setText(String.format(getString(R.string.activity_composer_attachments),
-                            mAttachmentsList.size()));
+                            mMessageModel.getAttachments().size()));
         } else {
             Toast.makeText(ComposerActivity.this,
                     getString(R.string.composer_activity_existed_attachment_warning),
@@ -256,13 +248,13 @@ public class ComposerActivity extends AppCompatActivity {
     }
 
     private void clearForm() {
-        mBinding.activityComposerTo.setText("");
-        mBinding.activityComposerBody.setText("");
-        mBinding.activityComposerSubject.setText("");
-        mAttachmentsList = new ArrayList<>();
+        mMessageModel.setRecipientAddresses("");
+        mMessageModel.setMessageBody("");
+        mMessageModel.setSubject("");
+        mMessageModel.getAttachments().clear();
         mBinding.activityComposerAttachments.setText(
                 String.format(getString(R.string.activity_composer_attachments),
-                        mAttachmentsList.size()));
+                        mMessageModel.getAttachments().size()));
     }
 
     @Override
