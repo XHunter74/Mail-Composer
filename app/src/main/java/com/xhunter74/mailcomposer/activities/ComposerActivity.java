@@ -88,9 +88,6 @@ public class ComposerActivity extends AppCompatActivity {
                 chooseAccount();
             }
         });
-        mBinding.activityComposerAttachments.setText(
-                String.format(getString(R.string.activity_composer_attachments),
-                        mMessageModel.getAttachments().size()));
         mBinding.activityComposerAttachments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,9 +105,6 @@ public class ComposerActivity extends AppCompatActivity {
             @Override
             public void onClick(int position) {
                 mMessageModel.getAttachments().remove(position);
-                mBinding.activityComposerAttachments.setText(
-                        String.format(getString(R.string.activity_composer_attachments),
-                                mMessageModel.getAttachments().size()));
             }
         });
         attachmentsDialog.show(getFragmentManager(), AttachmentsDialog.TAG);
@@ -231,11 +225,9 @@ public class ComposerActivity extends AppCompatActivity {
     }
 
     private void addAttachments(String path) {
-        if (!mMessageModel.getAttachments().contains(new AttachmentModel(path))) {
-            mMessageModel.getAttachments().add(new AttachmentModel(path));
-            mBinding.activityComposerAttachments
-                    .setText(String.format(getString(R.string.activity_composer_attachments),
-                            mMessageModel.getAttachments().size()));
+        AttachmentModel attachment = new AttachmentModel(path);
+        if (!mMessageModel.getAttachments().contains(attachment)) {
+            mMessageModel.getAttachments().add(attachment);
         } else {
             Toast.makeText(ComposerActivity.this,
                     getString(R.string.composer_activity_existed_attachment_warning),
@@ -252,9 +244,6 @@ public class ComposerActivity extends AppCompatActivity {
         mMessageModel.setMessageBody("");
         mMessageModel.setSubject("");
         mMessageModel.getAttachments().clear();
-        mBinding.activityComposerAttachments.setText(
-                String.format(getString(R.string.activity_composer_attachments),
-                        mMessageModel.getAttachments().size()));
     }
 
     @Override

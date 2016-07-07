@@ -104,7 +104,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_toRightOf="@+id/activity_composer_attachments_label"
                 android:gravity="center_vertical"
-                android:text="@string/activity_composer_attachments"
+                android:text="@{String.format(@string/activity_composer_attachments, message.attachments.size())}"
                 android:textSize="16sp"/>
 
             <EditText
