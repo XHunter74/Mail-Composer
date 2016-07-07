@@ -67,8 +67,10 @@ public class AttachmentsDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         mAttachments = new ArrayList<>();
         String[] attachments = getArguments().getStringArray(Constants.Extras.ATTACHMENTS);
-        for (String filePath : attachments) {
-            mAttachments.add(new AttachmentModel(filePath));
+        if (attachments != null) {
+            for (String filePath : attachments) {
+                mAttachments.add(new AttachmentModel(filePath));
+            }
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         DialogAttachmentsBinding binding = DataBindingUtil.inflate(
