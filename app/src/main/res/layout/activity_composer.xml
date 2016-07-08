@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View"/>
+
         <variable
             name="message"
             type="com.xhunter74.mailcomposer.models.MessageModel"/>
@@ -21,7 +23,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
 
             <TextView
@@ -85,33 +87,39 @@
                 android:text="@={message.subject}"
                 android:textSize="16sp"/>
 
-            <TextView
-                android:id="@+id/activity_composer_attachments_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/activity_composer_subject_label"
-                android:layout_marginTop="20dp"
-                android:text="@string/activity_composer_attachments_label"
-                android:textColor="@color/black"
-                android:textSize="16sp"/>
-
-            <TextView
-                android:id="@+id/activity_composer_attachments"
+            <RelativeLayout
+                android:id="@+id/activity_composer_attachments_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/activity_composer_subject_label"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="20dp"
-                android:layout_toRightOf="@+id/activity_composer_attachments_label"
-                android:gravity="center_vertical"
-                android:text="@{@string/activity_composer_attachments(message.attachments.size()), default=@string/activity_composer_attachments}"
-                android:textSize="16sp"/>
+                android:visibility="@{message.attachments.size()>0 ? View.VISIBLE : View.GONE}">
+
+                <TextView
+                    android:id="@+id/activity_composer_attachments_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/activity_composer_attachments_label"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/activity_composer_attachments"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_toRightOf="@+id/activity_composer_attachments_label"
+                    android:gravity="center_vertical"
+                    android:text="@{@string/activity_composer_attachments(message.attachments.size()), default=@string/activity_composer_attachments}"
+                    android:textSize="16sp"/>
+            </RelativeLayout>
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignParentBottom="true"
-                android:layout_below="@+id/activity_composer_attachments_label"
+                android:layout_below="@+id/activity_composer_attachments_container"
                 android:layout_marginTop="20dp"
                 android:gravity="top"
                 android:hint="@string/activity_composer_body_hint"
